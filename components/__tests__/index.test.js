@@ -29,13 +29,13 @@ test('it should display error message if no input value provided', () => {
   fireEvent.change(input, { target: { value: '' } });
   expect(input.value).toBe('');
   fireEvent.click(button);
-  expect(utils.getByText('Value field is required!')).toBeTruthy();
+  expect(utils.getByText('Url field is required!')).toBeTruthy();
 });
 
 test('it should display error message if no valid url provided', () => {
   const { input, button, ...utils } = setup();
   fireEvent.change(input, { target: { value: 'notvalidurl' } });
-  const errorMessage = "Value 'notvalidurl' is not a valid url! Example https://www.zalando.de/";
+  const errorMessage = "Url 'notvalidurl' is not valid! Example https://www.zalando.de/";
   expect(input.value).toBe('notvalidurl');
   fireEvent.click(button);
   expect(utils.getByText(errorMessage)).toBeTruthy();

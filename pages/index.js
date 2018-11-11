@@ -37,9 +37,9 @@ const styles = theme => ({
 });
 
 const constraints = {
-  value: {
+  url: {
     url: {
-      message: "'%{value}' is not a valid url! Example https://www.zalando.de/",
+      message: "'%{value}' is not valid! Example https://www.zalando.de/",
     },
     presence: {
       allowEmpty: false,
@@ -55,14 +55,14 @@ const mockResults = { data: [{ word: 'the', frequency: 20 }, { word: 'mu', frequ
 
 class Index extends Component {
   state = {
-    website: { value: 'https://www.zalando.com/', error: '' },
+    website: { url: 'https://www.zalando.com/', error: '' },
     results: null,
     error: null,
   };
 
   handleChange = event => {
     const website = {
-      value: event.target.value,
+      url: event.target.value,
       error: '',
     };
     this.setState({
@@ -71,20 +71,20 @@ class Index extends Component {
   };
 
   submit = async () => {
-    const { value } = this.state.website;
-    const clientErr = subformValidator({ value });
+    const { url } = this.state.website;
+    const clientErr = subformValidator({ url });
     if (clientErr) {
-      const [errMessage, ...rest] = clientErr.value;
+      const [errMessage, ...rest] = clientErr.url;
       this.setState({
         website: {
-          value,
+          url,
           error: rest.join(',') || errMessage,
         },
       });
     } else {
       // API call
       try {
-        const results = await axios.post(API, { url: value });
+        const results = await axios.post(API, { url });
         this.setState({ results });
       } catch (error) {
         if (error.response) {
@@ -145,7 +145,7 @@ class Index extends Component {
                 fullWidth
                 className={classes.textField}
                 name="website"
-                value={this.state.website.value}
+                value={this.state.website.url}
                 InputProps={{
                   inputProps: {
                     className: classes.textField,
