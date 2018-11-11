@@ -23,7 +23,7 @@ const ResultList = ({ results, classes }) => {
   console.log(data);
   return (
     <Paper className={classes.root}>
-      <Table className={classes.table}>
+      <Table className={classes.table} data-testid="result-list">
         <TableHead>
           <TableRow>
             <TableCell>Word</TableCell>
@@ -33,7 +33,7 @@ const ResultList = ({ results, classes }) => {
         <TableBody>
           {data.map(row => {
             return (
-              <TableRow key={row.word}>
+              <TableRow key={row.word} data-testid="row">
                 <TableCell component="th" scope="row">
                   {row.word}
                 </TableCell>

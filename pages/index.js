@@ -49,7 +49,7 @@ const constraints = {
 };
 export const subformValidator = data => validate(data, constraints);
 
-const API = 'http://localhost:8081/api/';
+const API = 'http://localhost:8080/api/';
 
 const mockResults = { data: [{ word: 'the', frequency: 20 }, { word: 'mu', frequency: 10 }] };
 
@@ -70,17 +70,6 @@ class Index extends Component {
     });
   };
 
-  postUrl = async url => {
-    const res = await axios({
-      method: 'POST',
-      url: API,
-      data: {
-        url: url,
-      },
-    });
-    return res;
-  };
-
   submit = async () => {
     const { value } = this.state.website;
     const clientErr = subformValidator({ value });
@@ -95,11 +84,31 @@ class Index extends Component {
     } else {
       // API call
       try {
-        const result = await this.postUrl(value);
+        const results = await axios.post(API, { url: value });
         this.setState({ results });
       } catch (error) {
-        console.log('error while posting url', error);
-        this.setState({ error });
+        if (error.response) {
+          console.log('server error', error.response.status);
+          this.setState({
+            error: {
+              statusCode: error.response.status,
+              isServerError: true,
+            },
+          });
+        } else if (error.request) {
+          console.log('client error', error.request);
+          this.setState({
+            error: {
+              statusCode: error.request.status,
+              isServerError: false,
+            },
+          });
+        } else {
+          console.log('error while posting url', error);
+          this.setState({ error });
+        }
+
+        // logic for deciding if client or server side error
       }
     }
   };
@@ -140,7 +149,7 @@ class Index extends Component {
                 InputProps={{
                   inputProps: {
                     className: classes.textField,
-                    placeholder: 'url-input',
+                    placeholder: 'i.e. https://zalando.com/',
                   },
                 }}
                 variant="outlined"
@@ -174,11 +183,11 @@ class Index extends Component {
             >
               Top 20 words
             </Typography>
-            <ResultList results />
+            <ResultList results={results} />
           </div>
         )}
         {error && (
-          <div className="error-page">
+          <div className="error-page" data-testid="error-page">
             <Typography
               component="h2"
               variant="h5"
@@ -189,12 +198,11 @@ class Index extends Component {
               Oh something went wrong :(
             </Typography>
             <Typography variant="body1" align="center">
-              {error.status || 'status code: 500'}
+              {`status code: ${error.statusCode}`}
             </Typography>
             <Typography variant="body1" align="center">
-              {error.msg || 'Something went wrong on our site. We are sorry for that.'}
-              {error.status < 500 && error.status >= 400 && 'Please check you url and try again.'}
-              {error.status >= 500 && 'Something went wrong on our site. We are sorry for that.'}
+              {!error.isServerError && 'Please check you url and try again.'}
+              {error.isServerError && 'Something went wrong on our site. We are sorry for that.'}
             </Typography>
           </div>
         )}

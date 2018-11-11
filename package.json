@@ -22,7 +22,6 @@
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
-    "isomorphic-unfetch": "^3.0.0",
     "mongoose": "^5.1.7",
     "next": "latest",
     "prop-types": "^15.6.2",
