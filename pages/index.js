@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import withLayout from '../lib/withLayout';
 
 import { withStyles } from '@material-ui/core/styles';
+import ResultList from '../components/ResultList';
 
 const styles = theme => ({
   textField: {
@@ -27,11 +28,16 @@ const styles = theme => ({
     },
     textAlign: 'right',
   },
+  subtitle: {
+    fontWeight: 800,
+    color: theme.palette.primary.main,
+    marginTop: '5.8rem',
+  },
 });
 
 class Index extends Component {
   state = {
-    url: 'www.zalando.de',
+    url: 'www.zalando.com',
   };
 
   handleChange = event => {
@@ -60,12 +66,12 @@ class Index extends Component {
         </Typography>
         <div className="search" style={{ paddingTop: 40 }}>
           <Grid container spacing={16} direction="row" justify="center" alignItems="center">
-            <Grid item xs={12} sm={12} md={4}>
+            <Grid item xs={12} sm={4} md={4}>
               <Typography variant="body1" className={classes.text}>
                 Let's scrape
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={12} md={6}>
+            <Grid item xs={12} sm={6} md={6}>
               <TextField
                 fullWidth
                 className={classes.textField}
@@ -80,7 +86,7 @@ class Index extends Component {
                 onChange={this.handleChange}
               />
             </Grid>
-            <Grid item xs={12} sm={12} md={2}>
+            <Grid item xs={12} sm={2} md={2}>
               <Button
                 variant="contained"
                 color="primary"
@@ -93,6 +99,20 @@ class Index extends Component {
               </Button>
             </Grid>
           </Grid>
+        </div>
+        <div className="result-list">
+          <Typography
+            component="h2"
+            variant="h5"
+            gutterBottom
+            align="center"
+            className={classes.subtitle}
+          >
+            Top 20 words
+          </Typography>
+          <ResultList
+            results={{ data: [{ word: 'the', frequency: 20 }, { word: 'mu', frequency: 10 }] }}
+          />
         </div>
       </main>
     );
