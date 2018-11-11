@@ -39,7 +39,7 @@ const styles = theme => ({
 const constraints = {
   value: {
     url: {
-      message: "'%{value} is not a valid url! Example https://www.zalando.de/",
+      message: "'%{value}' is not a valid url! Example https://www.zalando.de/",
     },
     presence: {
       allowEmpty: false,
@@ -55,7 +55,7 @@ const mockResults = { data: [{ word: 'the', frequency: 20 }, { word: 'mu', frequ
 
 class Index extends Component {
   state = {
-    website: { value: 'https://www.zalando.de/', error: '' },
+    website: { value: 'https://www.zalando.com/', error: '' },
     results: null,
     error: null,
   };
@@ -120,7 +120,7 @@ class Index extends Component {
           align="center"
           style={{ fontWeight: 800 }}
         >
-          Scrape web pages now
+          Scrape websites now
         </Typography>
         <div className="search" style={{ paddingTop: 40 }}>
           <Grid container spacing={16} direction="row" justify="center" alignItems="center">
@@ -140,6 +140,7 @@ class Index extends Component {
                 InputProps={{
                   inputProps: {
                     className: classes.textField,
+                    placeholder: 'url-input',
                   },
                 }}
                 variant="outlined"
@@ -148,6 +149,7 @@ class Index extends Component {
             </Grid>
             <Grid item xs={12} sm={2} md={2}>
               <Button
+                data-testid="submit"
                 variant="contained"
                 color="primary"
                 fullWidth

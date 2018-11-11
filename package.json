@@ -5,6 +5,7 @@
   "scripts": {
     "build": "next build",
     "start": "next start",
+    "test-client": "NODE_ENV=test jest --watchAll",
     "dev": "next",
     "lint": "eslint components pages lib server",
     "dev-express": "yarn nodemon server/app.js --watch server --exec babel-node --presets=@babel/preset-env"
@@ -32,12 +33,15 @@
   },
   "devDependencies": {
     "babel-eslint": "^8.2.5",
+    "babel-jest": "^23.6.0",
     "eslint": "^5.7.0",
     "eslint-config-airbnb": "^17.0.0",
+    "eslint-config-react-app": "^2.1.0",
     "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.10.0",
-    "eslint-config-react-app": "^2.1.0",
-    "nodemon": "^1.17.5"
+    "jest": "^23.6.0",
+    "nodemon": "^1.17.5",
+    "react-testing-library": "^5.2.3"
   }
 }
