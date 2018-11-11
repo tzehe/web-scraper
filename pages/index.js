@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import withLayout from '../lib/withLayout';
-
+import validate from 'validate.js';
 import { withStyles } from '@material-ui/core/styles';
 import ResultList from '../components/ResultList';
 
@@ -35,19 +35,54 @@ const styles = theme => ({
   },
 });
 
+const constraints = {
+  value: {
+    url: {
+      message: "'%{value} is not a valid url! Example https://www.zalando.de/",
+    },
+    presence: {
+      allowEmpty: false,
+      message: 'field is required!',
+    },
+  },
+};
+export const subformValidator = data => validate(data, constraints);
+
 class Index extends Component {
   state = {
-    url: 'www.zalando.com',
+    website: { value: 'https://www.zalando.de/', error: '' },
   };
 
   handleChange = event => {
+    const website = {
+      value: event.target.value,
+      error: '',
+    };
     this.setState({
-      url: event.target.value,
+      website,
     });
   };
 
+  submit = () => {
+    const { value } = this.state.website;
+    const err = subformValidator({ value });
+    if (err) {
+      const [errMessage, ...rest] = err.value;
+      this.setState({
+        website: {
+          value,
+          error: rest.join(',') || errMessage,
+        },
+      });
+    } else {
+      // API call
+    }
+
+    console.log(err);
+  };
+
   render() {
-    const { url } = this.state;
+    const { website } = this.state;
     const { classes } = this.props;
     return (
       <main style={{ margin: '0 auto', maxWidth: 1000, padding: '40px 20px' }}>
@@ -73,10 +108,12 @@ class Index extends Component {
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
               <TextField
+                error={this.state.website.error === '' ? false : true}
+                label={this.state.website.error}
                 fullWidth
                 className={classes.textField}
-                name="url"
-                value={this.state.url}
+                name="website"
+                value={this.state.website.value}
                 InputProps={{
                   inputProps: {
                     className: classes.textField,
@@ -93,7 +130,7 @@ class Index extends Component {
                 fullWidth
                 align="right"
                 className={classes.button}
-                // onClick={this.handleSearch}
+                onClick={this.submit}
               >
                 <span style={{ color: 'white' }}>SCRAPE</span>
               </Button>
