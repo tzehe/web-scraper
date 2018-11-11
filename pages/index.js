@@ -70,46 +70,57 @@ class Index extends Component {
     });
   };
 
-  submit = async () => {
-    const { url } = this.state.website;
-    const clientErr = subformValidator({ url });
-    if (clientErr) {
-      const [errMessage, ...rest] = clientErr.url;
+  validInput = url => {
+    const validationErr = subformValidator({ url });
+    if (validationErr) {
+      const [errMessage, ...rest] = validationErr.url;
       this.setState({
         website: {
           url,
           error: rest.join(',') || errMessage,
         },
       });
+      return false;
     } else {
-      // API call
-      try {
-        const results = await axios.post(API, { url });
-        this.setState({ results });
-      } catch (error) {
-        if (error.response) {
-          console.log('server error', error.response.status);
-          this.setState({
-            error: {
-              statusCode: error.response.status,
-              isServerError: true,
-            },
-          });
-        } else if (error.request) {
-          console.log('client error', error.request);
-          this.setState({
-            error: {
-              statusCode: error.request.status,
-              isServerError: false,
-            },
-          });
-        } else {
-          console.log('error while posting url', error);
-          this.setState({ error });
-        }
+      return true;
+    }
+  };
 
-        // logic for deciding if client or server side error
-      }
+  setError = error => {
+    if (error.response) {
+      console.log('server error', error.response.status);
+      this.setState({
+        error: {
+          statusCode: error.response.status,
+          isServerError: true,
+        },
+      });
+    } else if (error.request) {
+      console.log('client error', error.request);
+      this.setState({
+        error: {
+          statusCode: error.request.status,
+          isServerError: false,
+        },
+      });
+    } else {
+      console.log('error while posting url', error);
+      this.setState({ error });
+    }
+  };
+
+  submit = async () => {
+    const { url } = this.state.website;
+    if (!this.validInput(url)) {
+      return;
+    }
+    // API call
+    try {
+      const results = await axios.post(API, { url });
+      this.setState({ results });
+    } catch (error) {
+      // logic for deciding if client or server side error
+      this.setError(error);
     }
   };
 
@@ -140,12 +151,12 @@ class Index extends Component {
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
               <TextField
-                error={this.state.website.error === '' ? false : true}
-                label={this.state.website.error}
+                error={website.error === '' ? false : true}
+                label={website.error}
                 fullWidth
                 className={classes.textField}
                 name="website"
-                value={this.state.website.url}
+                value={website.url}
                 InputProps={{
                   inputProps: {
                     className: classes.textField,
@@ -201,7 +212,7 @@ class Index extends Component {
               {`status code: ${error.statusCode}`}
             </Typography>
             <Typography variant="body1" align="center">
-              {!error.isServerError && 'Please check you url and try again.'}
+              {!error.isServerError && 'Please check your url and try again.'}
               {error.isServerError && 'Something went wrong on our site. We are sorry for that.'}
             </Typography>
           </div>
