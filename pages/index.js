@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
+import axios from 'axios';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -48,9 +49,15 @@ const constraints = {
 };
 export const subformValidator = data => validate(data, constraints);
 
+const API = 'http://localhost:8081/api/';
+
+const mockResults = { data: [{ word: 'the', frequency: 20 }, { word: 'mu', frequency: 10 }] };
+
 class Index extends Component {
   state = {
     website: { value: 'https://www.zalando.de/', error: '' },
+    results: null,
+    error: null,
   };
 
   handleChange = event => {
@@ -63,11 +70,22 @@ class Index extends Component {
     });
   };
 
-  submit = () => {
+  postUrl = async url => {
+    const res = await axios({
+      method: 'POST',
+      url: API,
+      data: {
+        url: url,
+      },
+    });
+    return res;
+  };
+
+  submit = async () => {
     const { value } = this.state.website;
-    const err = subformValidator({ value });
-    if (err) {
-      const [errMessage, ...rest] = err.value;
+    const clientErr = subformValidator({ value });
+    if (clientErr) {
+      const [errMessage, ...rest] = clientErr.value;
       this.setState({
         website: {
           value,
@@ -76,13 +94,18 @@ class Index extends Component {
       });
     } else {
       // API call
+      try {
+        const result = await this.postUrl(value);
+        this.setState({ results });
+      } catch (error) {
+        console.log('error while posting url', error);
+        this.setState({ error });
+      }
     }
-
-    console.log(err);
   };
 
   render() {
-    const { website } = this.state;
+    const { website, results, error } = this.state;
     const { classes } = this.props;
     return (
       <main style={{ margin: '0 auto', maxWidth: 1000, padding: '40px 20px' }}>
@@ -137,20 +160,21 @@ class Index extends Component {
             </Grid>
           </Grid>
         </div>
-        <div className="result-list">
-          <Typography
-            component="h2"
-            variant="h5"
-            gutterBottom
-            align="center"
-            className={classes.subtitle}
-          >
-            Top 20 words
-          </Typography>
-          <ResultList
-            results={{ data: [{ word: 'the', frequency: 20 }, { word: 'mu', frequency: 10 }] }}
-          />
-        </div>
+
+        {results && (
+          <div className="result-list">
+            <Typography
+              component="h2"
+              variant="h5"
+              gutterBottom
+              align="center"
+              className={classes.subtitle}
+            >
+              Top 20 words
+            </Typography>
+            <ResultList results />
+          </div>
+        )}
       </main>
     );
   }
