@@ -1,0 +1,12 @@
+{
+  "extends": "react-app",
+  "parser": "babel-eslint",
+  "rules": {
+    "import/no-webpack-loader-syntax": 0,
+    "no-undef": "error",
+    "no-unused-vars": "warn",
+    "no-console": "warn",
+    "no-shadow": "warn",
+    "jsx-a11y/href-no-hash": 0
+  }
+}

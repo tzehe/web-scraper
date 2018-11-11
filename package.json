@@ -1,0 +1,42 @@
+{
+  "name": "zalando-web-scraper",
+  "version": "0.0.1",
+  "license": "MIT",
+  "scripts": {
+    "build": "next build",
+    "start": "next start",
+    "dev": "next",
+    "lint": "eslint components pages lib server",
+    "dev-express": "yarn nodemon server/app.js --watch server --exec babel-node --presets=@babel/preset-env"
+  },
+  "dependencies": {
+    "@babel/core": "^7.0.0-beta.51",
+    "@babel/node": "^7.0.0-beta.51",
+    "@babel/preset-env": "^7.0.0-beta.51",
+    "@material-ui/core": "^3.3.1",
+    "@material-ui/icons": "^3.0.1",
+    "@zeit/next-css": "^1.0.1",
+    "connect-mongo": "^2.0.1",
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "isomorphic-unfetch": "^3.0.0",
+    "material-ui-form": "^1.0.0-alpha.26",
+    "mongoose": "^5.1.7",
+    "next": "latest",
+    "prop-types": "^15.6.2",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "react-jss": "^8.6.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.5",
+    "eslint": "^5.7.0",
+    "eslint-config-airbnb": "^17.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.10.0",
+    "eslint-config-react-app": "^2.1.0",
+    "nodemon": "^1.17.5"
+  }
+}
