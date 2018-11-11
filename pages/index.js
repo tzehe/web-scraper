@@ -24,7 +24,7 @@ const styles = theme => ({
     borderRadius: 0,
   },
   text: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xs')]: {
       textAlign: 'center',
     },
     textAlign: 'right',
@@ -173,6 +173,27 @@ class Index extends Component {
               Top 20 words
             </Typography>
             <ResultList results />
+          </div>
+        )}
+        {error && (
+          <div className="error-page">
+            <Typography
+              component="h2"
+              variant="h5"
+              gutterBottom
+              align="center"
+              className={classes.subtitle}
+            >
+              Oh something went wrong :(
+            </Typography>
+            <Typography variant="body1" align="center">
+              {error.status || 'status code: 500'}
+            </Typography>
+            <Typography variant="body1" align="center">
+              {error.msg || 'Something went wrong on our site. We are sorry for that.'}
+              {error.status < 500 && error.status >= 400 && 'Please check you url and try again.'}
+              {error.status >= 500 && 'Something went wrong on our site. We are sorry for that.'}
+            </Typography>
           </div>
         )}
       </main>
