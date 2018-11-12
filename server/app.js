@@ -1,10 +1,13 @@
 import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
 import session from 'express-session';
 import mongoSessionStore from 'connect-mongo';
 import mongoose from 'mongoose';
 import next from 'next';
 import dotenv from 'dotenv';
-import User from './models/User';
+import cheerio from 'cheerio';
+import rp from 'request-promise';
 
 dotenv.config();
 
@@ -54,10 +57,79 @@ app.prepare().then(() => {
   // create a session
   //   server.use(session(sess));
 
-  server.get('/', async (req, res) => {
-    // req.session.foo = 'bar';
-    // const user = await User.findOne({ slug: 'team-builder-book' });
-    app.render(req, res, '/', { user });
+  // server.get('/', async (req, res) => {
+  //   // req.session.foo = 'bar';
+  //   // const user = await User.findOne({ slug: 'team-builder-book' });
+  //   app.render(req, res, '/');
+  // });
+
+  // Middleware
+  server.use(cors());
+  server.use(bodyParser());
+
+  // Routes
+
+  server.post('/api/scrape', (req, res, next) => {
+    const { url } = req.body;
+
+    const options = {
+      uri: url,
+      transform: function(body) {
+        return cheerio.load(body);
+      },
+    };
+
+    let paragraphs = [];
+
+    rp(options)
+      .then($ => {
+        $('p').each((i, elem) => {
+          paragraphs[i] = $(elem).text();
+        });
+
+        // get text content between paragraphs
+        const textContent = paragraphs.join(',');
+
+        // get separate words
+        const regex = /[a-zA-ZäöüÄÖÜß]+/gm;
+        const words = textContent.match(regex);
+
+        // create word map
+        const wordCountMap = words.reduce((wordCount, word) => {
+          const loweredWord = word.toLowerCase();
+          if (wordCount[loweredWord]) {
+            wordCount[loweredWord] = wordCount[loweredWord] + 1;
+          } else {
+            wordCount[loweredWord] = 1;
+          }
+          return wordCount;
+        }, {});
+
+        console.log(wordCountMap);
+
+        // sort and limit by resultSize (default = 20)
+        const resultSize = 20;
+        const sortedWords = Object.keys(wordCountMap)
+          .sort((a, b) => {
+            return wordCountMap[b] - wordCountMap[a];
+          })
+          .map(word => {
+            return {
+              word: word,
+              frequency: wordCountMap[word],
+            };
+          })
+          .splice(0, resultSize);
+
+        console.log(sortedWords);
+
+        res.json(sortedWords);
+      })
+      .catch(err => {
+        const error = new Error('an error occured while scraping the page');
+        error.httpStatusCode = 500;
+        return next(error);
+      });
   });
 
   server.get('*', (req, res) => handle(req, res));
