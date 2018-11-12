@@ -20,7 +20,6 @@ const styles = theme => ({
 
 const ResultList = ({ results, classes }) => {
   const { data } = results;
-  console.log(data);
   return (
     <Paper className={classes.root}>
       <Table className={classes.table} data-testid="result-list">
