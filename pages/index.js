@@ -49,7 +49,7 @@ const constraints = {
 };
 export const subformValidator = data => validate(data, constraints);
 
-const API = 'http://localhost:8000/api/scrape';
+const API = `http://localhost:8000/api/scrape`;
 
 const mockResults = { data: [{ word: 'the', frequency: 20 }, { word: 'mu', frequency: 10 }] };
 
@@ -116,7 +116,7 @@ class Index extends Component {
     }
     // API call
     try {
-      const results = await axios.post(API, { url });
+      const results = await axios.post(`${API}?resultSize=${this.props.resultSize}`, { url });
       this.setState({ results });
     } catch (error) {
       // logic for deciding if client or server side error
@@ -222,12 +222,12 @@ class Index extends Component {
   }
 }
 
-// Index.getInitialProps = async ({ query }) => ({ user: query.user });
+Index.getInitialProps = async ({ query }) => ({ resultSize: query.resultSize });
 
-// Index.propTypes = {
-//   user: PropTypes.shape({ email: PropTypes.string.isRequired }),
-// };
+Index.propTypes = {
+  resultSize: PropTypes.number.isRequired,
+};
 
-// Index.defaultProps = { user: null };
+Index.defaultProps = { resultSize: 20 };
 
 export default withLayout(withStyles(styles)(Index));
