@@ -108,7 +108,8 @@ app.prepare().then(() => {
         console.log(wordCountMap);
 
         // sort and limit by resultSize (default = 20)
-        const resultSize = 20;
+        const resultSize = parseInt(req.query.resultSize);
+
         const sortedWords = Object.keys(wordCountMap)
           .sort((a, b) => {
             return wordCountMap[b] - wordCountMap[a];
