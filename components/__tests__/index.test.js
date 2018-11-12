@@ -70,7 +70,7 @@ test('it should show only 10 words', async () => {
   });
   const API = `http://localhost:8000/api/scrape?resultSize=${resultSize}`;
   const url = 'https://www.zalando.de/';
-  const { input, button, ...utils } = setup(10);
+  const { input, button, ...utils } = setup('10');
   fireEvent.change(input, { target: { value: url } });
   fireEvent.click(button);
   const resultList = await waitForElement(() => utils.getByTestId('result-list'));

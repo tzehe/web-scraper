@@ -225,9 +225,9 @@ class Index extends Component {
 Index.getInitialProps = async ({ query }) => ({ resultSize: query.resultSize });
 
 Index.propTypes = {
-  resultSize: PropTypes.number.isRequired,
+  resultSize: PropTypes.string.isRequired,
 };
 
-Index.defaultProps = { resultSize: 20 };
+Index.defaultProps = { resultSize: '20' };
 
 export default withLayout(withStyles(styles)(Index));
