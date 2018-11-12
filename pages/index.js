@@ -49,7 +49,7 @@ const constraints = {
 };
 export const subformValidator = data => validate(data, constraints);
 
-const API = 'http://localhost:8080/api/';
+const API = 'http://localhost:8000/api/scrape';
 
 const mockResults = { data: [{ word: 'the', frequency: 20 }, { word: 'mu', frequency: 10 }] };
 
@@ -96,7 +96,7 @@ class Index extends Component {
         },
       });
     } else if (error.request) {
-      console.log('client error', error.request);
+      console.log('client error', error);
       this.setState({
         error: {
           statusCode: error.request.status,

@@ -45,7 +45,7 @@ test('it should render <ResultList />', async () => {
   axiosMock.post.mockResolvedValueOnce({
     data: [{ word: 'the', frequency: 20 }, { word: 'mu', frequency: 10 }],
   });
-  const API = 'http://localhost:8080/api/';
+  const API = 'http://localhost:8000/api/scrape';
   const url = 'https://www.zalando.de/';
   const { input, button, ...utils } = setup();
   fireEvent.change(input, { target: { value: url } });
