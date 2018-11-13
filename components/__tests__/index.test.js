@@ -49,7 +49,7 @@ test('it should render <ResultList /> with 20 words (default)', async () => {
   axiosMock.post.mockResolvedValueOnce({
     data: mockList,
   });
-  const API = `http://localhost:8000/api/scrape?resultSize=${20}`;
+  const API = `/api/scrape?resultSize=${20}`;
   const url = 'https://www.zalando.de/';
   const { input, button, ...utils } = setup();
   fireEvent.change(input, { target: { value: url } });
@@ -68,7 +68,7 @@ test('it should show only 10 words', async () => {
   axiosMock.post.mockResolvedValueOnce({
     data: mockList.slice(0, resultSize),
   });
-  const API = `http://localhost:8000/api/scrape?resultSize=${resultSize}`;
+  const API = `/api/scrape?resultSize=${resultSize}`;
   const url = 'https://www.zalando.de/';
   const { input, button, ...utils } = setup('10');
   fireEvent.change(input, { target: { value: url } });
