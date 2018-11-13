@@ -43,14 +43,14 @@ app.prepare().then(() => {
 
   server.post('/api/scrape', async (req, res, next) => {
     const { url } = req.body;
+    const resultSize = parseInt(req.query.resultSize);
 
     // get result from cache if available
 
     const data = await Result.getFromCache(url);
 
     if (data) {
-      console.log('SEND CACHED RESULT', data);
-      res.json(data);
+      res.json(data.slice(0, resultSize));
       return;
     }
 
@@ -90,7 +90,6 @@ app.prepare().then(() => {
         console.log(wordCountMap);
 
         // sort and limit by resultSize (default = 20)
-        const resultSize = parseInt(req.query.resultSize);
 
         const sortedWords = Object.keys(wordCountMap)
           .sort((a, b) => {
@@ -101,12 +100,9 @@ app.prepare().then(() => {
               word: word,
               frequency: wordCountMap[word],
             };
-          })
-          .splice(0, resultSize);
-
-        console.log('write to cache', sortedWords);
+          });
         const cache = await Result.writeToCache({ url: url, data: sortedWords });
-        res.json(sortedWords);
+        res.json(sortedWords.slice(0, resultSize));
       })
       .catch(err => {
         const error = new Error('an error occured while scraping the page');
