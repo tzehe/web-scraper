@@ -1,4 +1,4 @@
-# Zalando Web Scraper
+# Web Scraper
 
 https://web-scraper.now.sh/
 
