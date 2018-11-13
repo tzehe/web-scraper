@@ -3,10 +3,8 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "build": "npm run build:next && npm run build:server",
-    "build:next": "next build",
-    "build:server": "babel server -d compiled/server && cp -R static compiled",
-    "start": "node compiled/server/app.js",
+    "build": "next build",
+    "start": "babel-node --presets=@babel/preset-env server/app.js",
     "test-client": "NODE_ENV=test jest --watchAll",
     "dev": "next",
     "lint": "eslint components pages lib server",
@@ -33,6 +31,7 @@
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-jss": "^8.6.0",
+    "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "validate.js": "^0.12.0"
   },

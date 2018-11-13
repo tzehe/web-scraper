@@ -1,7 +1,8 @@
 {
+  "version": 1,
+  "name": "web-scraper",
   "env": {
     "NODE_ENV": "production"
   },
-
   "dotenv": true
 }

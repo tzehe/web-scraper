@@ -115,6 +115,10 @@ app.prepare().then(() => {
       });
   });
 
+  server.get('/api', (req, res) => {
+    res.json({ msg: 'api' });
+  });
+
   server.get('*', (req, res) => handle(req, res));
 
   server.listen(port, err => {
