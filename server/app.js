@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+
 import mongoose from 'mongoose';
 import next from 'next';
 import dotenv from 'dotenv';
@@ -10,6 +11,7 @@ import Result from './models/Result';
 
 dotenv.config();
 
+const dev = process.env.NODE_ENV !== 'production';
 const port = process.env.PORT || 8000;
 const ROOT_URL = process.env.ROOT_URL || `http://localhost:${port}`;
 
@@ -27,7 +29,6 @@ mongoose.connect(
 );
 
 // next.js app
-const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
